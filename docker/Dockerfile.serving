@@ -1,0 +1,27 @@
+FROM python:3.9-slim
+
+WORKDIR /app
+
+# Instalar dependencias del sistema para psycopg2
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copiar requirements e instalar
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copiar el código fuente
+COPY src/ ./src/
+
+# Variables de entorno por defecto
+ENV MLFLOW_TRACKING_URI=http://mlflow:5000
+ENV MODEL_URI=models:/Telco-Churn-Prediction/1
+ENV PYTHONPATH=/app
+
+# Exponer puerto FastAPI
+EXPOSE 8000
+
+# Comando para ejecutar la aplicación
+CMD ["uvicorn", "src.serving.app:app", "--host", "0.0.0.0", "--port", "8000"]

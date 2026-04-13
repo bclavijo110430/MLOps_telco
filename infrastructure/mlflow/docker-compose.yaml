@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: mlflow_db
+    restart: always
+    environment:
+      POSTGRES_USER: mlflow_user
+      POSTGRES_PASSWORD: mlflow_password
+      POSTGRES_DB: mlflow_db
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    networks:
+      - mlflow-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mlflow_user -d mlflow_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.15.1
+    container_name: mlflow_server
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "5000:5000"
+    environment:
+      - MLFLOW_BACKEND_STORE_URI=postgresql://mlflow_user:mlflow_password@db:5432/mlflow_db
+      - MLFLOW_ARTIFACT_ROOT=/mlflow/artifacts
+      - MLFLOW_HOST=0.0.0.0
+      - MLFLOW_PORT=5000
+    volumes:
+      - ./artifacts:/mlflow/
+      
+    command: >
+      sh -c "pip install psycopg2-binary && 
+             mlflow server 
+             -h 0.0.0.0 
+             -p 5000 
+             --backend-store-uri postgresql://mlflow_user:mlflow_password@db:5432/mlflow_db 
+             --default-artifact-root /mlflow/artifacts"
+    networks:
+      - mlflow-net
+
+networks:
+  mlflow-net:
+    name: mlflow-net
+    driver: bridge
+
+volumes:
+  pgdata:
