@@ -9,7 +9,7 @@ on:
 jobs:
   train-pipeline:
     name: Run Training Pipeline
-    runs-on: daniserver
+    runs-on: self-hosted
 
     steps:
       - name: Checkout Repository
