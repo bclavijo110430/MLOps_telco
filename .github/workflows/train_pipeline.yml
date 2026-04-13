@@ -25,3 +25,15 @@ jobs:
         run: |
           chmod +x ./run_pipeline.sh
           ./run_pipeline.sh
+
+      
+      - name: Log in to DockerHub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push Docker Image for Serving
+        run: |
+          docker build -f docker/Dockerfile.serving -t ${{ vars.DOCKERHUB_USERNAME }}/mlopstelcoserving:latest .
+          docker push ${{ vars.DOCKERHUB_USERNAME }}/mlopstelcoserving:latest
