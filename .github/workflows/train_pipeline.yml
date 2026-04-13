@@ -35,5 +35,5 @@ jobs:
 
       - name: Build and Push Docker Image for Serving
         run: |
-          docker build -f docker/Dockerfile.serving -t ${{ vars.DOCKERHUB_USERNAME }}/mlopstelcoserving:latest .
-          docker push ${{ vars.DOCKERHUB_USERNAME }}/mlopstelcoserving:latest
+          docker build -f docker/Dockerfile.serving -t ${{ secrets.DOCKERHUB_USERNAME }}/mlopstelcoserving:latest .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/mlopstelcoserving:latest
