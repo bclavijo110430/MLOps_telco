@@ -1,0 +1,27 @@
+name: Train Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  train-pipeline:
+    name: Run Training Pipeline
+    runs-on: daniserver
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set Up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+
+      - name: Run Training Pipeline
+        run: |
+          chmod +x ./run_pipeline.sh
+          ./run_pipeline.sh

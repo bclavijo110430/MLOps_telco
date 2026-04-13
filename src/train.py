@@ -19,8 +19,8 @@ def train_model(data_dir):
     y_test = pd.read_csv(f"{data_dir}/y_test.csv").values.ravel()
 
     # Parámetros del modelo
-    n_estimators = 100
-    max_depth = 10
+    n_estimators = 1000
+    max_depth = 100
 
     with mlflow.start_run():
         print("Training RandomForest model...")

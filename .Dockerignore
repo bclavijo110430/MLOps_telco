@@ -1,0 +1,7 @@
+*infrastructure/mlflow/pgdata
+**/pgdata
+*infrastructure/mlflow/artifacts
+**/artifacts
+.git
+__pycache__
+*.pyc

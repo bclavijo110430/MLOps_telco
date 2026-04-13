@@ -1,6 +1,0 @@
-infrastructure
-**/pgdata
-**/artifacts
-.git
-__pycache__
-*.pyc
