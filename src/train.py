@@ -9,7 +9,7 @@ import os
 def train_model(data_dir):
     # Configurar MLflow Tracking
     mlflow.set_tracking_uri("https://mlflow.bclavijo.xyz")
-    mlflow.set_experiment("Telco-Churn-Prediction")
+    mlflow.set_experiment("Telco-Churn-Prediction-v2")
 
     # Cargar datos
     print(f"Loading data from {data_dir}...")
@@ -45,11 +45,17 @@ def train_model(data_dir):
         mlflow.log_metric("accuracy", acc)
         mlflow.log_metric("f1_score", f1)
 
+        # Inferir la firma del modelo
+        from mlflow.models.signature import infer_signature
+        signature = infer_signature(X_train, model.predict(X_train))
+
         # Loguear el modelo y registrarlo en el Model Registry
+        print(f"Artifact URI: {mlflow.get_artifact_uri()}")
         mlflow.sklearn.log_model(
             sk_model=model, 
             artifact_path="churn-model",
-            registered_model_name="Telco-Churn-Prediction"
+            registered_model_name="Telco-Churn-Prediction",
+            signature=signature
         )
         
         # Guardar localmente también
