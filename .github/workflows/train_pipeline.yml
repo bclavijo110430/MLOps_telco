@@ -27,13 +27,37 @@ jobs:
           ./run_pipeline.sh
 
       
+      - name: Set Image Tag
+        id: vars
+        run: echo "tag=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
       - name: Log in to DockerHub
         uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and Push Docker Image for Serving
+      - name: Build and Push Docker Image
+        env:
+          IMG: ${{ secrets.DOCKERHUB_USERNAME }}/mlopstelcoserving
+          TAG: ${{ steps.vars.outputs.tag }}
         run: |
-          docker build -f docker/Dockerfile.serving -t ${{ secrets.DOCKERHUB_USERNAME }}/mlopstelcoserving:latest .
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/mlopstelcoserving:latest
+          echo "Building image with tag: $TAG"
+          docker build -f docker/Dockerfile.serving -t $IMG:$TAG -t $IMG:latest .
+          docker push $IMG:$TAG
+          docker push $IMG:latest
+
+      - name: Update Values and Deploy to K8s
+        env:
+          TAG: ${{ steps.vars.outputs.tag }}
+        run: |
+          # Update tag locally for Helm execution
+          sed -i "s/tag: .*/tag: \"$TAG\"/" infrastructure/servingChart/values.yaml
+          
+          # Deploy using Helm
+          helm upgrade --install serving-chart ./infrastructure/servingChart
+
+      - name: Verify Deployment Status
+        run: |
+          echo "Waiting for pods to be ready..."
+          kubectl rollout status deployment/serving-chart --timeout=120s
