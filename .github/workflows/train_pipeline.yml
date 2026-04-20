@@ -55,9 +55,9 @@ jobs:
           sed -i "s/tag: .*/tag: \"$TAG\"/" infrastructure/servingChart/values.yaml
           
           # Deploy using Helm
-          helm upgrade --install serving-chart ./infrastructure/servingChart
+          helm upgrade --install serving-service ./infrastructure/servingChart
 
       - name: Verify Deployment Status
         run: |
           echo "Waiting for pods to be ready..."
-          kubectl rollout status deployment/serving-chart --timeout=120s
+          kubectl rollout status deployment/serving-service-serving-chart --timeout=120s
