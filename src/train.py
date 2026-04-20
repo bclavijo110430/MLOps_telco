@@ -9,7 +9,16 @@ import os
 def train_model(data_dir):
     # Configurar MLflow Tracking
     mlflow.set_tracking_uri("https://mlflow.bclavijo.xyz")
-    mlflow.set_experiment("Telco-Churn-Prediction-v2")
+    # Forzamos el uso del proxy de artefactos mediante el esquema mlflow-artifacts:/
+    experiment_name = "Telco-Churn-Prediction-v3"
+    env_artifact_location = "mlflow-artifacts:/"
+    
+    experiment = mlflow.get_experiment_by_name(experiment_name)
+    if not experiment:
+        print(f"Creating experiment {experiment_name} with location {env_artifact_location}")
+        mlflow.create_experiment(experiment_name, artifact_location=env_artifact_location)
+    
+    mlflow.set_experiment(experiment_name)
 
     # Cargar datos
     print(f"Loading data from {data_dir}...")
