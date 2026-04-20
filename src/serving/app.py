@@ -82,8 +82,12 @@ def predict(input_data: PredictionInput):
         # Nota: Asume que los datos ya vienen codificados numéricamente pero sin escalar
         scaled_data = scaler.transform(df)
         
-        # 3. Predecir
-        predictions = model.predict(scaled_data)
+        # 3. Convertir a DataFrame con nombres de columnas como strings para cumplir con la firma de MLflow
+        feature_names = [str(i) for i in range(scaled_data.shape[1])]
+        scaled_df = pd.DataFrame(scaled_data, columns=feature_names)
+        
+        # 4. Predecir
+        predictions = model.predict(scaled_df)
         
         return {
             "predictions": predictions.tolist(),
