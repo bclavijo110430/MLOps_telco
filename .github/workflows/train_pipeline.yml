@@ -55,7 +55,7 @@ jobs:
           sed -i "s/tag: .*/tag: \"$TAG\"/" infrastructure/servingChart/values.yaml
           
           # Deploy using Helm
-          helm upgrade --install serving-service ./infrastructure/servingChart
+          helm upgrade --install serving-service ./infrastructure/servingChart -n serving --create-namespace
 
       - name: Verify Deployment Status
         run: |
