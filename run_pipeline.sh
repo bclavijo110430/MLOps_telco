@@ -27,4 +27,4 @@ docker run  \
   $IMAGE_NAME python src/train.py
 
 echo -e "\n✅ Pipeline completado exitosamente."
-echo "🔗 Revisa la UI de MLflow: http://localhost:5000"
+echo "🔗 Revisa la UI de MLflow: https://mlflow.bclavijo.xyz"
