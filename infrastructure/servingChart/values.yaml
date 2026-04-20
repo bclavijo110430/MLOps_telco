@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: docker.io/bclavijo110430/mlopstelcoserving
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   tag: "latest"
 
 service:
