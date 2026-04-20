@@ -31,11 +31,19 @@ This repository contains the structure for an MLOps pipeline, following best pra
 La aplicación incluye un servicio de alta disponibilidad para servir el modelo entrenado.
 
 ### Despliegue del Servicio
+
+#### Con Helm (Kubernetes - Recomendado)
+```bash
+helm install serving-service ./infrastructure/servingChart -n serving --create-namespace
+```
+
+#### Con Docker Compose
 ```bash
 docker compose -f infrastructure/serving/docker-compose.yaml up --build -d
 ```
 
 ### Endpoints
+- **Production URL (K8s):** `https://serving.bclavijo.xyz`
 - `GET /health`: Verifica el estado de la API, el modelo y el escalador.
 - `POST /predict`: Recibe datos numéricos y retorna la predicción de Churn.
 

@@ -1,0 +1,42 @@
+replicaCount: 1
+
+image:
+  repository: docker.io/bclavijo110430/mlopstelcoserving
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+service:
+  type: ClusterIP
+  port: 8000
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  hosts:
+    - host: serving.bclavijo.xyz
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+
+env:
+  MLFLOW_TRACKING_URI: "https://mlflow.bclavijo.xyz"
+  MODEL_URI: "models:/Telco-Churn-Prediction/latest"
+  SCALER_PATH: "/app/data/processed/scaler.joblib"
+
+persistence:
+  enabled: false
+  storageClass: "standard"
+  accessMode: ReadWriteOnce
+  size: 1Gi
+  mountPath: /app/data
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 256Mi

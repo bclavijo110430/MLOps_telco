@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "mlflow.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "mlflow.name" . }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "mlflow.name" . }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "mlflow.name" . }}
+    spec:
+      initContainers:
+        - name: init-db
+          image: busybox:1.28
+          command: ['sh', '-c', 'until nc -z {{ include "mlflow.fullname" . }}-postgresql 5432; do echo waiting for postgresql; sleep 2; done;']
+      containers:
+        - name: mlflow
+          image: "{{ .Values.mlflow.image.repository }}:{{ .Values.mlflow.image.tag }}"
+          imagePullPolicy: {{ .Values.mlflow.image.pullPolicy }}
+          command: ["sh", "-c"]
+          args:
+            - "pip install psycopg2-binary && mlflow server -h 0.0.0.0 -p 5000 --backend-store-uri postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@{{ include "mlflow.fullname" . }}-postgresql:5432/$(POSTGRES_DB) --default-artifact-root /mlflow/artifacts"
+          env:
+            - name: POSTGRES_USER
+              value: {{ .Values.postgresql.user | quote }}
+            - name: POSTGRES_DB
+              value: {{ .Values.postgresql.db | quote }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ default (printf "%s-db-credentials" (include "mlflow.fullname" .)) .Values.postgresql.existingSecret }}
+                  key: POSTGRES_PASSWORD
+          ports:
+            - containerPort: 5000
+              name: http
+          resources:
+            {{- toYaml .Values.mlflow.resources | nindent 12 }}
+          volumeMounts:
+            - name: mlflow-artifacts
+              mountPath: /mlflow/artifacts
+      volumes:
+        - name: mlflow-artifacts
+          persistentVolumeClaim:
+            claimName: {{ include "mlflow.fullname" . }}-artifacts

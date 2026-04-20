@@ -10,7 +10,7 @@ echo "🚀 Iniciando Ciclo MLOps (Build + Preprocessing + Training)..."
 
 # 1. Construir la imagen del proyecto
 echo -e "\n🔨 [1/3] Construyendo imagen Docker..."
-docker build -t $IMAGE_NAME -f $DOCKERFILE_PATH $BUILD_CONTEXT --no-cache
+docker build -t $IMAGE_NAME -f $DOCKERFILE_PATH $BUILD_CONTEXT  --no-cache
 
 # 2. Ejecutar el Preprocesamiento
 echo -e "\n🧹 [2/3] Ejecutando Preprocesamiento..."
@@ -21,7 +21,7 @@ docker run \
 # 3. Ejecutar el Entrenamiento (MLflow Tracking)
 echo -e "\n🧠 [3/3] Ejecutando Entrenamiento con MLflow..."
 # Usamos --network mlflow-net para conectar con el servidor mlflow_server
-docker run --network mlflow-net \
+docker run  \
   -v "$(pwd)/data:/app/data" \
   -v "$(pwd)/models:/app/models" \
   $IMAGE_NAME python src/train.py

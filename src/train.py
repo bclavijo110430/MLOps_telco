@@ -8,7 +8,7 @@ import os
 
 def train_model(data_dir):
     # Configurar MLflow Tracking
-    mlflow.set_tracking_uri("http://mlflow:5000")
+    mlflow.set_tracking_uri("https://mlflow.bclavijo.xyz")
     mlflow.set_experiment("Telco-Churn-Prediction")
 
     # Cargar datos
@@ -19,8 +19,8 @@ def train_model(data_dir):
     y_test = pd.read_csv(f"{data_dir}/y_test.csv").values.ravel()
 
     # Parámetros del modelo
-    n_estimators = 1000
-    max_depth = 100
+    n_estimators = 100
+    max_depth = 10
 
     with mlflow.start_run():
         print("Training RandomForest model...")
