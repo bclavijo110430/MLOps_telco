@@ -22,8 +22,8 @@ ingress:
           pathType: ImplementationSpecific
 
 env:
-  MLFLOW_TRACKING_URI: "https://mlflow.bclavijo.xyz"
-  MODEL_URI: "models:/Telco-Churn-Prediction-v3/latest"
+  MLFLOW_TRACKING_URI: "https://mlflow.bclavijo.xyz/"
+  MODEL_URI: "models:/Telco-Churn-Prediction/latest"
   SCALER_PATH: "/app/data/processed/scaler.joblib"
 
 persistence:

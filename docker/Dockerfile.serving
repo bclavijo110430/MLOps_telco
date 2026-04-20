@@ -14,7 +14,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copiar el código fuente
 COPY src/ ./src/
-
+COPY data/processed/scaler.joblib /app/data/processed/scaler.joblib
 # Variables de entorno por defecto
 ENV MLFLOW_TRACKING_URI=http://mlflow:5000
 ENV MODEL_URI=models:/Telco-Churn-Prediction/1
