@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'src/**'
+      - 'infrastructure/**'
+      - 'data/**'
   workflow_dispatch:
 
 jobs:

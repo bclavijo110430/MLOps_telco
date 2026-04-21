@@ -1,32 +1,32 @@
-# MLOps Practice Project
+# Proyecto de Práctica MLOps
 
-This repository contains the structure for an MLOps pipeline, following best practices for model training, preprocessing, and deployment.
+Este repositorio contiene la estructura para un pipeline de MLOps, siguiendo las mejores prácticas para el entrenamiento, preprocesamiento y despliegue de modelos.
 
-## Project Description
+## Descripción del Proyecto
 
-**MLOps Telco Churn** is a project designed to predict customer churn in the telecommunications industry. It leverages MLOps principles to ensure efficient model development, deployment, and monitoring. The project includes data preprocessing, model training, and serving through a FastAPI application, all containerized for reproducibility.
+**MLOps Telco Churn** es un proyecto diseñado para predecir el abandono de clientes (churn) en la industria de las telecomunicaciones. Utiliza principios de MLOps para asegurar un desarrollo, despliegue y monitoreo eficiente de los modelos. El proyecto incluye el preprocesamiento de datos, el entrenamiento del modelo y el servicio a través de una aplicación FastAPI, todo contenedorizado para asegurar la reproducibilidad.
 
-## Structure
+## Estructura
 
-- `data/`: Data management.
-  - `raw/`: Immutable raw data.
-  - `processed/`: Features ready for training.
-- `src/`: Source code.
-  - `preprocessing.py`: Feature engineering and data cleaning.
-  - `train.py`: Model training logic.
-  - `predict.py`: Inference scripts.
-- `models/`: Versioned model artifacts.
-- `tests/`: Unit and integration tests.
-- `docker/`: Containerization for reproducibility.
-- `pipelines/`: CI/CD automation.
+- `data/`: Gestión de datos.
+  - `raw/`: Datos brutos inmutables.
+  - `processed/`: Características listas para el entrenamiento.
+- `src/`: Código fuente.
+  - `preprocessing.py`: Ingeniería de características y limpieza de datos.
+  - `train.py`: Lógica de entrenamiento del modelo.
+  - `predict.py`: Scripts de inferencia.
+- `models/`: Artefactos de modelos versionados.
+- `tests/`: Pruebas unitarias y de integración.
+- `docker/`: Contenedores para reproducibilidad.
+- `infrastructure/`: Manifiestos de infraestructura y Helm charts.
 
-## Getting Started
+## Primeros Pasos
 
-1. Install dependencies: `pip install -r requirements.txt`
-2. Run preprocessing: `python src/preprocessing.py`
-3. Train model: `python src/train.py`
+1. Instalar dependencias: `pip install -r requirements.txt`
+2. Ejecutar preprocesamiento: `python src/preprocessing.py`
+3. Entrenar el modelo: `python src/train.py`
 
-## Serving & Model Inference (FastAPI)
+## Serving e Inferencia de Modelos (FastAPI)
 
 La aplicación incluye un servicio de alta disponibilidad para servir el modelo entrenado.
 
@@ -43,7 +43,7 @@ docker compose -f infrastructure/serving/docker-compose.yaml up --build -d
 ```
 
 ### Endpoints
-- **Production URL (K8s):** `https://serving.bclavijo.xyz`
+- **URL de Producción (K8s):** `https://serving.bclavijo.xyz`
 - `GET /health`: Verifica el estado de la API, el modelo y el escalador.
 - `POST /predict`: Recibe datos numéricos y retorna la predicción de Churn.
 
@@ -93,5 +93,5 @@ curl -X POST http://localhost:8000/predict \
 ```
 
 ### Interpretación de Resultados
-- **[0]**: El cliente NO abandonará (Loyal).
-- **[1]**: El cliente TIENE RIESGO de abandonar (Churn).
+- **[0]**: El cliente NO abandonará .
+- **[1]**: El cliente TIENE RIESGO de abandonar.
