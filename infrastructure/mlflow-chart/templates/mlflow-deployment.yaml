@@ -14,6 +14,9 @@ spec:
       labels:
         app.kubernetes.io/name: {{ include "mlflow.name" . }}
     spec:
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 1000
       initContainers:
         - name: init-db
           image: busybox:1.28
@@ -42,8 +45,12 @@ spec:
             {{- toYaml .Values.mlflow.resources | nindent 12 }}
           volumeMounts:
             - name: mlflow-artifacts
-              mountPath: /mlflow/artifacts
+              mountPath: /mlflow
       volumes:
         - name: mlflow-artifacts
+          {{- if .Values.mlflow.persistence.enabled }}
           persistentVolumeClaim:
             claimName: {{ include "mlflow.fullname" . }}-artifacts
+          {{- else }}
+          emptyDir: {}
+          {{- end }}

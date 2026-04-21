@@ -35,6 +35,12 @@ spec:
           volumeMounts:
             - name: postgresql-data
               mountPath: /var/lib/postgresql/data
+      {{- if not .Values.postgresql.persistence.enabled }}
+      volumes:
+        - name: postgresql-data
+          emptyDir: {}
+      {{- end }}
+  {{- if .Values.postgresql.persistence.enabled }}
   volumeClaimTemplates:
     - metadata:
         name: postgresql-data
@@ -47,3 +53,4 @@ spec:
         {{- if .Values.postgresql.persistence.storageClass }}
         storageClassName: {{ .Values.postgresql.persistence.storageClass }}
         {{- end }}
+  {{- end }}
